@@ -299,6 +299,22 @@
           </div>
         </div>
 
+        <!-- نموذج الطلب المخفي - سيظهر عند الضغط على "اطلب أونلاين" -->
+        <div id="orderFormContainer" style="display: none; margin-top: 20px;">
+          <h3>طلب جديد</h3>
+          <form id="orderForm" class="form">
+            <input name="name" placeholder="الاسم *" required>
+            <input name="phone" placeholder="رقم الهاتف *" required>
+            <input name="address" placeholder="العنوان *" required>
+            <textarea name="note" placeholder="تفاصيل الطلب (مثلاً: باراسيتامول 20 كبسولة) *" required></textarea>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+              <button class="btn" type="button" id="cancelOrder">إلغاء</button>
+              <button class="btn btn-primary" type="submit">إرسال الطلب</button>
+            </div>
+          </form>
+          <div id="msg" style="margin-top:12px;color:green"></div>
+        </div>
+
         <h3 style="margin-top:18px">منتجات شائعة</h3>
         <div id="productsGrid" class="products"></div>
       </section>
@@ -325,40 +341,38 @@
     <footer class="muted">© <span id="year"></span> Dr-Merna-Pharmacy— جميع الحقوق محفوظة</footer>
   </div>
 
-  <!-- Modal for order -->
-  <div class="modal-bg" id="modalBg">
-    <div class="modal">
-      <h3 id="modalTitle">طلب أونلاين</h3>
-      <p class="muted">اكتب اسم الدواء والكميّة وسنتواصل معك لتأكيد الطلب.</p>
-      <form id="modalOrderForm">
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <input name="name" placeholder="الاسم *" required style="padding:10px;border-radius:8px;border:1px solid var(--border); background: var(--card); color: var(--text)">
-          <input name="phone" placeholder="رقم الهاتف *" required style="padding:10px;border-radius:8px;border:1px solid var(--border); background: var(--card); color: var(--text)">
-          <input name="address" placeholder="العنوان *" required style="padding:10px;border-radius:8px;border:1px solid var(--border); background: var(--card); color: var(--text)">
-          <textarea name="note" placeholder="اكتب هنا طلبك (اسم الدواء، الكمية)..." required style="padding:10px;border-radius:8px;border:1px solid var(--border);min-height:90px; background: var(--card); color: var(--text)"></textarea>
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <button type="button" class="btn" id="closeModal">إلغاء</button>
-            <button type="submit" class="btn btn-primary">إرسال الطلب</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <script>
     // ====== إعدادات قابلة للتعديل ======
     const PHARMACY_NAME = 'صيدلية دكتورة ميرنا';
     const WHATSAPP_NUMBER = '201208881905'; // رقم واتساب دولي بدون + مثال: 201234567890
     const PHONE_NUMBER = '+201208881905'; // رقم للصيدلية
     const MAP_LINK = 'https://www.google.com/maps'; // ضع رابط Google Maps لعنوان الصيدلية
-    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN'; // ضع توكن البوت الخاص بك هنا
-    const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID'; // ضع معرف المحادثة الخاص بك هنا
 
     // ====== DOM ======
     document.getElementById('year').innerText = new Date().getFullYear();
     document.getElementById('phoneNumber').innerText = PHONE_NUMBER;
     document.getElementById('addressLink').href = MAP_LINK;
     document.getElementById('mapsLink').href = MAP_LINK;
+
+    // عناصر DOM المهمة
+    const orderBtn = document.getElementById('orderBtn');
+    const orderFormContainer = document.getElementById('orderFormContainer');
+    const orderForm = document.getElementById('orderForm');
+    const cancelOrderBtn = document.getElementById('cancelOrder');
+    const msgDiv = document.getElementById('msg');
+
+    // إظهار/إخفاء نموذج الطلب
+    orderBtn.addEventListener('click', () => {
+      orderFormContainer.style.display = 'block';
+      orderBtn.style.display = 'none';
+    });
+
+    cancelOrderBtn.addEventListener('click', () => {
+      orderFormContainer.style.display = 'none';
+      orderBtn.style.display = 'inline-block';
+      orderForm.reset();
+      msgDiv.innerText = '';
+    });
 
     // Whatsapp links
     const waBtn = document.getElementById('waBtn');
@@ -404,100 +418,89 @@
     // Quick order from product
     window.quickOrder = function(id){
       const prod = products.find(x=>x.id===id);
-      const text = `أود طلب: ${prod.name} - ${prod.price}`;
-      openWhatsAppWith(text);
+      orderFormContainer.style.display = 'block';
+      orderBtn.style.display = 'none';
+      orderForm.note.value = `أود طلب: ${prod.name} - ${prod.price}`;
     }
 
-    // ===== Modal order handling =====
-    const modalBg = document.getElementById('modalBg');
-    const orderBtn = document.getElementById('orderBtn');
-    const closeModal = document.getElementById('closeModal');
-    
-    orderBtn.addEventListener('click',()=> modalBg.style.display='flex');
-    closeModal.addEventListener('click',()=> modalBg.style.display='none');
-    
-    // إرسال الطلب إلى Telegram
-    document.getElementById('modalOrderForm').addEventListener('submit', async (e)=>{
+    // Form submission
+    orderForm.addEventListener('submit', async (e)=>{
       e.preventDefault();
-      const data = new FormData(e.target);
-      const name = data.get('name') || '';
-      const phone = data.get('phone') || '';
-      const address = data.get('address') || '';
-      const note = data.get('note') || '';
+      const f = e.target;
+      const data = { 
+        name: f.name.value.trim(), 
+        phone: f.phone.value.trim(), 
+        address: f.address.value.trim(),
+        note: f.note.value.trim() 
+      };
       
-      // التحقق من الحقول الإلزامية
-      if (!name || !phone || !address || !note) {
-        alert('يرجى ملء جميع الحقول الإلزامية');
-        return;
+      // التحقق من البيانات
+      if (!data.name || !data.phone || !data.address || !data.note) {
+        return alert('جميع الحقول مطلوبة');
       }
       
-      // إعداد رسالة الطلب
-      const message = `
-🛒 طلب جديد من ${PHARMACY_NAME}
-
-👤 الاسم: ${name}
-📞 الهاتف: ${phone}
-📍 العنوان: ${address}
-📋 الطلب: ${note}
-
-🕐 الوقت: ${new Date().toLocaleString('ar-EG')}
-      `;
-      
       try {
-        // إرسال الطلب إلى Telegram
-        await sendToTelegram(message);
+        // إرسال الطلب إلى التليجرام
+        await sendToTelegram(data);
         
-        // إظهار رسالة نجاح
-        alert('تم إرسال الطلب بنجاح! سنتواصل معك قريبًا.');
-        
-        // إغلاق النافذة المنبثقة
-        modalBg.style.display='none';
+        msgDiv.innerText = 'تم إرسال الطلب بنجاح — سنتواصل معك خلال دقائق';
+        msgDiv.style.color = 'green';
         
         // إعادة تعيين النموذج
-        e.target.reset();
-      } catch (error) {
-        console.error('Error sending order:', error);
-        alert('حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى أو الاتصال بنا مباشرة.');
+        f.reset();
+        orderFormContainer.style.display = 'none';
+        orderBtn.style.display = 'inline-block';
+        
+        // إخفاء الرسالة بعد 5 ثواني
+        setTimeout(() => {
+          msgDiv.innerText = '';
+        }, 5000);
+      } catch (err) {
+        msgDiv.innerText = 'حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى';
+        msgDiv.style.color = 'red';
+        console.error(err);
       }
     });
 
-    // دالة إرسال الطلب إلى Telegram
-    async function sendToTelegram(message) {
-      // إذا لم يتم تعيين التوكن أو معرف المحادثة، استخدم الطريقة البديلة
-      if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || 
-          TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN' || 
-          TELEGRAM_CHAT_ID === 'YOUR_CHAT_ID') {
-        
-        // بديل: استخدام Webhook أو إرسال بريد إلكتروني
-        console.log('Telegram bot not configured. Order details:', message);
-        
-        // هنا يمكنك إضافة كود لإرسال الطلب عبر وسيلة أخرى
-        // مثل إرسال بريد إلكتروني أو حفظ في قاعدة بيانات
-        
-        return Promise.resolve(); // محاكاة نجاح الإرسال للاختبار
-      }
+    // إرسال الطلب إلى التليجرام
+    async function sendToTelegram(data) {
+      // هنا سيتم إضافة كود إرسال الطلب إلى التليجرام
+      // سيتم استخدام متغيرات البيئة (environment variables) في الخادم
+      // هذا مجرد محاكاة للعملية
       
-      // إرسال الطلب إلى Telegram باستخدام API
-      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-      const payload = {
-        chat_id: TELEGRAM_CHAT_ID,
-        text: message,
-        parse_mode: 'HTML'
-      };
+      const message = `
+طلب جديد من ${PHARMACY_NAME}
+الاسم: ${data.name}
+الهاتف: ${data.phone}
+العنوان: ${data.address}
+الطلب: ${data.note}
+      `;
       
-      const response = await fetch(url, {
+      // محاكاة إرسال البيانات للخادم
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // في التطبيق الحقيقي، سيتم إرسال الطلب إلى API الخاص بالتليجرام
+      console.log('إرسال الطلب إلى التليجرام:', message);
+      
+      // يمكنك إضافة كود إرسال حقيقي هنا مثل:
+      /*
+      const response = await fetch('/api/send-order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          name: data.name,
+          phone: data.phone,
+          address: data.address,
+          note: data.note
+        })
       });
       
       if (!response.ok) {
-        throw new Error(`Telegram API error: ${response.status}`);
+        throw new Error('فشل في إرسال الطلب');
       }
-      
-      return response.json();
+      */
     }
 
     // Theme toggle
