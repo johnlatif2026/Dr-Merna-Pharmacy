@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>تسجيل دخول الادمن</title>
+  <style>
+    body{font-family:Inter, Arial;padding:40px;background:#f3f6fb;color:#0b1220}
+    .card{max-width:420px;margin:60px auto;background:#fff;padding:22px;border-radius:14px;box-shadow:0 10px 30px rgba(11,17,36,0.06)}
+    input{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:1px solid #eef2ff}
+    button{width:100%;padding:12px;margin-top:12px;background:#0b6df0;color:#fff;border:none;border-radius:10px;cursor:pointer}
+    .muted{color:#6b7280}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h3>تسجيل دخول الادمن</h3>
+    <p class="muted">ادخل بيانات الادمن لتصل للوحة التحكم</p>
+    <form id="loginForm">
+      <input name="name" placeholder="اسم المستخدم" required>
+      <input name="password" type="password" placeholder="كلمة السر" required>
+      <button type="submit">دخول</button>
+    </form>
+    <div id="msg" style="color:red;margin-top:10px"></div>
+  </div>
+
+<script>
+async function getCsrf(){
+  try {
+    const r = await fetch('/api/csrf-token', { credentials:'same-origin' });
+    const j = await r.json();
+    return j.csrfToken;
+  } catch (e) {
+    console.error('csrf error', e);
+    return null;
+  }
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f = e.target;
+  const csrf = await getCsrf();
+  if (!csrf) return document.getElementById('msg').innerText = 'خطأ: لم يتم الحصول على رمز الحماية';
+  try {
+    const res = await fetch('/api/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-csrf-token':csrf},
+      credentials:'same-origin',
+      body: JSON.stringify({ name: f.name.value, password: f.password.value })
+    });
+    const j = await res.json();
+    if (j.ok) window.location.href = '/dashboard';
+    else document.getElementById('msg').innerText = j.error || 'فشل الدخول';
+  } catch (err) {
+    document.getElementById('msg').innerText = 'خطأ في الاتصال';
+  }
+});
+</script>
+</body>
+</html>
