@@ -133,15 +133,21 @@ app.post('/api/logout', verifyJWT, (req, res) => {
 ------------------------*/
 app.post('/api/orders', async (req, res) => {
   try {
-    const { name, phone, note } = req.body;
-    if (!name || !phone) return res.status(400).json({ error: 'name and phone required' });
+    const { name, phone, address, note } = req.body; // أضف address هنا
+    if (!name || !phone || !address) return res.status(400).json({ error: 'name, phone and address required' }); // جعل العنوان إجباري
+    
     const docRef = await db.collection('orders').add({
-      name, phone, note: note || '', status: 'new', createdAt: admin.firestore.FieldValue.serverTimestamp()
+      name, 
+      phone, 
+      address, // أضف العنوان هنا
+      note: note || '', 
+      status: 'new', 
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
 
     // Telegram notification
     if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) {
-      const text = `🆕 طلب جديد\nالاسم: ${name}\nالهاتف: ${phone}\nالطلب: ${note || '-'}\nID: ${docRef.id}`;
+      const text = `🆕 طلب جديد\nالاسم: ${name}\nالهاتف: ${phone}\nالعنوان: ${address}\nالطلب: ${note || '-'}\nID: ${docRef.id}`; // أضف العنوان
       const tgUrl = `https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`;
       try {
         await axios.post(tgUrl, { chat_id: process.env.TELEGRAM_CHAT_ID, text });
@@ -157,7 +163,7 @@ app.post('/api/orders', async (req, res) => {
           from: process.env.SMTP_FROM || process.env.SMTP_USER,
           to: process.env.NOTIFY_EMAIL_TO,
           subject: `طلب جديد - ${process.env.SITE_NAME || 'صيدلية'}`,
-          text: `طلب جديد\nالاسم: ${name}\nالهاتف: ${phone}\nالطلب: ${note || '-'}\nID: ${docRef.id}`
+          text: `طلب جديد\nالاسم: ${name}\nالهاتف: ${phone}\nالعنوان: ${address}\nالطلب: ${note || '-'}\nID: ${docRef.id}` // أضف العنوان
         });
       } catch (e) {
         console.warn('SMTP notify failed:', e.message);
