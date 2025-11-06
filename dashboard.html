@@ -1,285 +1,492 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>لوحة تحكم الادمن</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>لوحة تحكم صيدلية دكتورة ميرنا</title>
   <style>
-    body{font-family:Inter, Arial;padding:18px;background:#f4f7fb;color:#0b1220}
-    .wrap{max-width:1100px;margin:auto}
-    .top{display:flex;justify-content:space-between;align-items:center}
-    .card{background:#fff;padding:14px;border-radius:12px;box-shadow:0 8px 30px rgba(11,17,36,0.06);margin-top:12px}
-    input,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #eef5ff}
-    button{padding:10px 12px;border-radius:10px;border:none;background:#0b6df0;color:#fff;cursor:pointer}
-    .grid{display:grid;grid-template-columns:1fr 380px;gap:12px}
-    .products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
-    .product{padding:10px;border-radius:10px;border:1px solid #eef5ff;background:#fbfdff}
-    .controls{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
-    @media(max-width:900px){ .grid{grid-template-columns:1fr} }
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --accent: #0066FF;
+      --muted: #6b7280;
+      --radius: 14px;
+      --text: #0b1220;
+      --border: #e6eef8;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #3b82f6;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border: #334155;
+    }
+
+    * {
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
+      background: var(--bg);
+      margin: 0;
+      padding: 28px;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: var(--card);
+      padding: 18px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 30px rgba(11, 17, 36, 0.06);
+      border: 1px solid var(--border);
+      margin-top: 18px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+      background: var(--card);
+      color: var(--text);
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 18px;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .product {
+      background: var(--card);
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .product img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .order-item {
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+
+    .order-item:last-child {
+      border-bottom: none;
+    }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+    }
+
+    .status-new {
+      background: rgba(34, 197, 94, 0.1);
+      color: #16a34a;
+    }
+
+    .status-pending {
+      background: rgba(234, 179, 8, 0.1);
+      color: #ca8a04;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+      
+      .controls {
+        flex-direction: column;
+      }
+      
+      .controls button {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="top">
-      <h2>لوحة تحكم الصيدلية</h2>
-      <div><button id="logoutBtn">خروج</button></div>
+      <div>
+        <h2>لوحة تحكم صيدلية دكتورة ميرنا</h2>
+        <div class="muted">إدارة المنتجات والطلبات</div>
+      </div>
+      <div>
+        <button id="logoutBtn" class="btn-primary">تسجيل الخروج</button>
+      </div>
     </div>
 
     <div class="grid">
       <div>
         <div class="card">
-          <h3>إضافة منتج</h3>
+          <h3>إضافة منتج جديد</h3>
           <form id="addProductForm">
             <input name="name" placeholder="اسم المنتج" required>
-            <input name="price" placeholder="السعر" required>
+            <input name="price" placeholder="السعر (مثال: EGP 120)" required>
             <input name="image" type="file" accept="image/*">
-            <div style="margin-top:8px"><button type="submit">إضافة</button></div>
+            <div style="margin-top:12px">
+              <button type="submit" class="btn-primary">إضافة المنتج</button>
+            </div>
           </form>
         </div>
 
         <div class="card">
-          <h3>المنتجات</h3>
+          <h3>المنتجات المتاحة</h3>
           <div id="productsGrid" class="products-grid">جارٍ التحميل...</div>
         </div>
 
         <div class="card">
-          <h3>الطلبات</h3>
+          <h3>الطلبات الجديدة</h3>
           <div id="ordersList">جارٍ التحميل...</div>
         </div>
       </div>
 
       <aside>
         <div class="card">
-          <h3>إرسال رسالة عبر SMTP</h3>
+          <h3>إرسال رسالة بريد إلكتروني</h3>
           <form id="sendEmailForm">
-            <input name="to" placeholder="إلى (بريد)" required>
+            <input name="to" placeholder="إلى (البريد الإلكتروني)" required>
             <input name="subject" placeholder="الموضوع" required>
-            <textarea name="text" placeholder="نص الرسالة" required></textarea>
-            <div style="margin-top:8px"><button type="submit">إرسال</button></div>
+            <textarea name="text" placeholder="نص الرسالة" required rows="4"></textarea>
+            <div style="margin-top:12px">
+              <button type="submit" class="btn-primary">إرسال الرسالة</button>
+            </div>
           </form>
-          <div id="emailMsg"></div>
+          <div id="emailMsg" style="margin-top:10px"></div>
         </div>
 
-        <div class="card" style="margin-top:12px">
-          <h4>معلومات</h4>
-          <div class="muted">الصور تحفظ في مجلد uploads/ ويُعرض رابطها تلقائياً</div>
+        <div class="card">
+          <h4>معلومات النظام</h4>
+          <div class="muted" style="font-size:14px;line-height:1.5">
+            • الصور تحفظ في مجلد uploads/<br>
+            • يتم عرض رابط الصور تلقائياً<br>
+            • الطلبات تظهر تلقائياً من قاعدة البيانات
+          </div>
         </div>
       </aside>
     </div>
   </div>
 
-<script>
-async function getCsrf(){
-  const r = await fetch('/api/csrf-token', { credentials:'same-origin' });
-  const j = await r.json();
-  return j.csrfToken;
-}
+  <script>
+    // الحصول على رمز CSRF
+    async function getCsrf() {
+      const r = await fetch('/api/csrf-token', { credentials: 'same-origin' });
+      const j = await r.json();
+      return j.csrfToken;
+    }
 
-async function fetchProducts(){
-  const r = await fetch('/api/products');
-  const j = await r.json();
-  const grid = document.getElementById('productsGrid');
-  grid.innerHTML = '';
-  if (j.items && j.items.length){
-    j.items.forEach(p=>{
-      const div = document.createElement('div'); div.className='product';
-      div.innerHTML = `<strong>${p.name}</strong><div style="color:#0b6df0;font-weight:800">${p.price}</div>${p.imageUrl?'<img src="'+p.imageUrl+'" style="max-width:100%;margin-top:8px">':''}
-        <div class="controls">
-          <button onclick="editProduct('${p.id}')">تعديل</button>
-          <button onclick="deleteProduct('${p.id}')">حذف</button>
-          <button onclick="outOfStock('${p.id}')">خلص من المخزون</button>
-        </div>`;
-      grid.appendChild(div);
+    // جلب المنتجات
+    async function fetchProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const j = await res.json();
+        const grid = document.getElementById('productsGrid');
+        
+        if (!j.items || j.items.length === 0) {
+          grid.innerHTML = '<div class="muted">لا توجد منتجات</div>';
+          return;
+        }
+        
+        grid.innerHTML = '';
+        j.items.forEach(p => {
+          const div = document.createElement('div');
+          div.className = 'product';
+          div.innerHTML = `
+            <div style="font-weight:800">${p.name}</div>
+            <div style="color:var(--accent);font-weight:800;margin:6px 0">${p.price}</div>
+            ${p.imageUrl ? `<img src="${p.imageUrl}" alt="${p.name}">` : ''}
+            <div class="controls">
+              <button onclick="editProduct('${p.id}')">تعديل</button>
+              <button onclick="deleteProduct('${p.id}')">حذف</button>
+              <button onclick="outOfStock('${p.id}')">نفذ من المخزون</button>
+            </div>
+          `;
+          grid.appendChild(div);
+        });
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        document.getElementById('productsGrid').innerHTML = '<div class="muted">خطأ في تحميل المنتجات</div>';
+      }
+    }
+
+    // جلب الطلبات
+    async function fetchOrders() {
+      try {
+        const token = await getCsrf();
+        const res = await fetch('/api/admin/orders', {
+          headers: { 'x-csrf-token': token },
+          credentials: 'same-origin'
+        });
+        const j = await res.json();
+        const el = document.getElementById('ordersList');
+        
+        if (!j.items || j.items.length === 0) {
+          el.innerHTML = '<div class="muted">لا توجد طلبات جديدة</div>';
+          return;
+        }
+        
+        el.innerHTML = j.items.map(o => `
+          <div class="order-item">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <span class="status-badge status-new">جديد</span>
+                <strong>${o.name}</strong>
+              </div>
+              <div style="text-align:left;font-size:14px">${new Date(o.createdAt?.toDate() || Date.now()).toLocaleString('ar-EG')}</div>
+            </div>
+            <div class="muted" style="margin:6px 0">${o.phone}</div>
+            ${o.address ? `<div style="margin:4px 0"><strong>العنوان:</strong> ${o.address}</div>` : ''}
+            <div>${o.note || 'لا توجد تفاصيل إضافية'}</div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+        document.getElementById('ordersList').innerHTML = '<div class="muted">خطأ في تحميل الطلبات</div>';
+      }
+    }
+
+    // إضافة منتج جديد
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const csrf = await getCsrf();
+        const f = e.target;
+        const data = new FormData();
+        data.append('name', f.name.value);
+        data.append('price', f.price.value);
+        if (f.image.files[0]) data.append('image', f.image.files[0]);
+        
+        const res = await fetch('/api/products', {
+          method: 'POST',
+          headers: { 'x-csrf-token': csrf },
+          credentials: 'same-origin',
+          body: data
+        });
+        
+        const j = await res.json();
+        if (j.ok) {
+          fetchProducts();
+          f.reset();
+          alert('تم إضافة المنتج بنجاح');
+        } else {
+          alert('حدث خطأ أثناء إضافة المنتج');
+        }
+      } catch (error) {
+        console.error('Error adding product:', error);
+        alert('حدث خطأ في الاتصال');
+      }
     });
-  } else grid.innerHTML = '<div class="muted">لا توجد منتجات</div>';
-}
 
-async function fetchOrders(){
-  const token = await getCsrf();
-  const res = await fetch('/api/admin/orders', { headers:{'x-csrf-token':token}, credentials:'same-origin' });
-  const j = await res.json();
-  const el = document.getElementById('ordersList');
-  if (j.items && j.items.length) {
-    el.innerHTML = j.items.map(o=>`<div style="border-bottom:1px solid #eef5ff;padding:8px"><strong>${o.name}</strong> - ${o.phone}<div>${o.note||''}</div></div>`).join('');
-  } else el.innerText = 'لا توجد طلبات';
-}
+    // حذف منتج
+    async function deleteProduct(id) {
+      if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+      
+      try {
+        const csrf = await getCsrf();
+        const res = await fetch('/api/products/' + id, {
+          method: 'DELETE',
+          headers: { 'x-csrf-token': csrf },
+          credentials: 'same-origin'
+        });
+        
+        const j = await res.json();
+        if (j.ok) {
+          fetchProducts();
+          alert('تم حذف المنتج بنجاح');
+        }
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('حدث خطأ أثناء الحذف');
+      }
+    }
 
-document.getElementById('addProductForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const csrf = await getCsrf();
-  const f = e.target;
-  const data = new FormData();
-  data.append('name', f.name.value);
-  data.append('price', f.price.value);
-  if (f.image.files[0]) data.append('image', f.image.files[0]);
-  const res = await fetch('/api/products', { method:'POST', headers:{'x-csrf-token':csrf}, credentials:'same-origin', body: data });
-  const j = await res.json();
-  if (j.ok) { fetchProducts(); f.reset(); } else alert('خطأ');
-});
+    // نفاذ المخزون
+    async function outOfStock(id) {
+      try {
+        const csrf = await getCsrf();
+        const res = await fetch('/api/products/' + id + '/out-of-stock', {
+          method: 'POST',
+          headers: { 'x-csrf-token': csrf },
+          credentials: 'same-origin'
+        });
+        
+        const j = await res.json();
+        if (j.ok) {
+          fetchProducts();
+          alert('تم تحديث حالة المنتج');
+        }
+      } catch (error) {
+        console.error('Error updating stock:', error);
+        alert('حدث خطأ أثناء التحديث');
+      }
+    }
 
-async function deleteProduct(id){
-  if (!confirm('هل تريد حذف المنتج؟')) return;
-  const csrf = await getCsrf();
-  const res = await fetch('/api/products/'+id, { method:'DELETE', headers:{'x-csrf-token':csrf}, credentials:'same-origin' });
-  const j = await res.json();
-  if (j.ok) fetchProducts();
-}
+    // تعديل منتج
+    async function editProduct(id) {
+      const name = prompt('اسم المنتج الجديد');
+      if (!name) return;
+      
+      const price = prompt('السعر الجديد');
+      if (!price) return;
+      
+      try {
+        const csrf = await getCsrf();
+        const res = await fetch('/api/products/' + id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrf
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({ name, price })
+        });
+        
+        const j = await res.json();
+        if (j.ok) {
+          fetchProducts();
+          alert('تم تعديل المنتج بنجاح');
+        }
+      } catch (error) {
+        console.error('Error editing product:', error);
+        alert('حدث خطأ أثناء التعديل');
+      }
+    }
 
-async function outOfStock(id){
-  const csrf = await getCsrf();
-  const res = await fetch('/api/products/'+id+'/out-of-stock', { method:'POST', headers:{'x-csrf-token':csrf}, credentials:'same-origin' });
-  const j = await res.json();
-  if (j.ok) fetchProducts();
-}
+    // تسجيل الخروج
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      try {
+        const csrf = await getCsrf();
+        await fetch('/api/logout', {
+          method: 'POST',
+          headers: { 'x-csrf-token': csrf },
+          credentials: 'same-origin'
+        });
+        window.location.href = '/login';
+      } catch (error) {
+        console.error('Error logging out:', error);
+        window.location.href = '/login';
+      }
+    });
 
-async function editProduct(id){
-  const name = prompt('اسم المنتج الجديد');
-  const price = prompt('السعر الجديد');
-  if (!name || !price) return;
-  const csrf = await getCsrf();
-  const res = await fetch('/api/products/'+id, { method:'PUT', headers:{'Content-Type':'application/json','x-csrf-token':csrf}, credentials:'same-origin', body: JSON.stringify({ name, price }) });
-  const j = await res.json();
-  if (j.ok) fetchProducts();
-}
+    // إرسال بريد إلكتروني
+    document.getElementById('sendEmailForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const csrf = await getCsrf();
+        const f = e.target;
+        const res = await fetch('/api/admin/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-csrf-token': csrf
+          },
+          credentials: 'same-origin',
+          body: JSON.stringify({
+            to: f.to.value,
+            subject: f.subject.value,
+            text: f.text.value
+          })
+        });
+        
+        const j = await res.json();
+        const msgEl = document.getElementById('emailMsg');
+        if (j.ok) {
+          msgEl.innerText = 'تم إرسال الرسالة بنجاح';
+          msgEl.style.color = 'green';
+          f.reset();
+        } else {
+          msgEl.innerText = 'خطأ: ' + (j.error || 'فشل الإرسال');
+          msgEl.style.color = 'red';
+        }
+        
+        setTimeout(() => {
+          msgEl.innerText = '';
+        }, 5000);
+      } catch (error) {
+        console.error('Error sending email:', error);
+        document.getElementById('emailMsg').innerText = 'خطأ في الاتصال';
+        document.getElementById('emailMsg').style.color = 'red';
+      }
+    });
 
-document.getElementById('logoutBtn').addEventListener('click', async ()=>{
-  const csrf = await getCsrf();
-  await fetch('/api/logout', { method:'POST', headers:{'x-csrf-token':csrf}, credentials:'same-origin' });
-  window.location.href = '/login';
-});
-
-document.getElementById('sendEmailForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const csrf = await getCsrf();
-  const f = e.target;
-  const res = await fetch('/api/admin/send-email', { method:'POST', headers:{'Content-Type':'application/json','x-csrf-token':csrf}, credentials:'same-origin', body: JSON.stringify({ to: f.to.value, subject: f.subject.value, text: f.text.value }) });
-  const j = await res.json();
-  document.getElementById('emailMsg').innerText = j.ok ? 'تم الإرسال' : ('خطأ: '+(j.error||''));
-});
-
-window.addEventListener('load', ()=>{
-  fetchProducts();
-  fetchOrders();
-});
-</script>
+    // تحميل البيانات عند بدء التشغيل
+    window.addEventListener('load', () => {
+      fetchProducts();
+      fetchOrders();
+    });
+  </script>
 </body>
 </html>
-
-    <div class="card">
-      <h3>المنتجات</h3>
-      <div class="products-grid" id="productsGrid"></div>
-    </div>
-
-    <div class="card">
-      <h3>الطلبات</h3>
-      <div id="ordersList">جارٍ التحميل...</div>
-    </div>
-
-    <div class="card">
-      <h3>إرسال رسالة عبر SMTP</h3>
-      <form id="sendEmailForm">
-        <input name="to" placeholder="إلى (بريد إلكتروني)" required>
-        <input name="subject" placeholder="الموضوع" required>
-        <textarea name="text" placeholder="النص" required></textarea>
-        <div style="margin-top:8px"><button type="submit">إرسال</button></div>
-      </form>
-      <div id="emailMsg"></div>
-    </div>
-  </div>
-
-<script>
-async function getCsrf(){
-  const r = await fetch('/api/csrf-token', { credentials: 'same-origin' });
-  const j = await r.json();
-  return j.csrfToken;
-}
-
-async function fetchProducts(){
-  const res = await fetch('/api/products');
-  const j = await res.json();
-  const grid = document.getElementById('productsGrid');
-  grid.innerHTML = '';
-  j.items.forEach(p=>{
-    const div = document.createElement('div'); div.className='product';
-    div.innerHTML = `<strong>${p.name}</strong><div>${p.price}</div>${p.imageUrl?'<img src="'+p.imageUrl+'" style="max-width:100%;margin-top:8px">':''}
-      <div class="controls">
-        <button onclick="editProduct('${p.id}')">تعديل</button>
-        <button onclick="deleteProduct('${p.id}')">حذف</button>
-        <button onclick="outOfStock('${p.id}')">خلص من المخزون</button>
-      </div>`;
-    grid.appendChild(div);
-  });
-}
-
-async function fetchOrders(){
-  const token = await getCsrf();
-  const res = await fetch('/api/admin/orders', { headers:{'x-csrf-token':token}, credentials:'same-origin' });
-  const j = await res.json();
-  const el = document.getElementById('ordersList');
-  if (j.items) {
-    el.innerHTML = j.items.map(o=>`<div style="border-bottom:1px solid #eef2ff;padding:8px"><strong>${o.name}</strong> - ${o.phone}<div>${o.note||''}</div></div>`).join('');
-  } else el.innerText = 'لا يوجد طلبات';
-}
-
-document.getElementById('addProductForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const token = await getCsrf();
-  const form = e.target;
-  const data = new FormData();
-  data.append('name', form.name.value);
-  data.append('price', form.price.value);
-  if (form.image.files[0]) data.append('image', form.image.files[0]);
-  const res = await fetch('/api/products', { method:'POST', body: data, headers:{'x-csrf-token':token}, credentials:'same-origin' });
-  const j = await res.json();
-  if (j.ok) {
-    fetchProducts();
-    form.reset();
-  } else alert('حدث خطأ');
-});
-
-async function deleteProduct(id){
-  if (!confirm('هل تريد حذف المنتج؟')) return;
-  const token = await getCsrf();
-  const res = await fetch('/api/products/'+id, { method:'DELETE', headers:{'x-csrf-token':token}, credentials:'same-origin' });
-  const j = await res.json();
-  if (j.ok) fetchProducts();
-}
-
-async function outOfStock(id){
-  const token = await getCsrf();
-  const res = await fetch('/api/products/'+id+'/out-of-stock', { method:'POST', headers:{'x-csrf-token':token}, credentials:'same-origin' });
-  const j = await res.json();
-  if (j.ok) fetchProducts();
-}
-
-async function editProduct(id){
-  const name = prompt('اسم المنتج الجديد');
-  const price = prompt('السعر الجديد');
-  if (!name || !price) return;
-  const token = await getCsrf();
-  const res = await fetch('/api/products/'+id, { method:'PUT', headers:{'Content-Type':'application/json','x-csrf-token':token}, credentials:'same-origin', body: JSON.stringify({ name, price }) });
-  const j = await res.json();
-  if (j.ok) fetchProducts();
-}
-
-document.getElementById('logoutBtn').addEventListener('click', async ()=>{
-  const token = await getCsrf();
-  await fetch('/api/logout', { method:'POST', headers:{'x-csrf-token':token}, credentials:'same-origin' });
-  window.location.href = '/login';
-});
-
-document.getElementById('sendEmailForm').addEventListener('submit', async (e)=>{
-  e.preventDefault();
-  const token = await getCsrf();
-  const f = e.target;
-  const res = await fetch('/api/admin/send-email', { method:'POST', headers:{'Content-Type':'application/json','x-csrf-token':token}, credentials:'same-origin', body: JSON.stringify({ to: f.to.value, subject: f.subject.value, text: f.text.value }) });
-  const j = await res.json();
-  document.getElementById('emailMsg').innerText = j.ok ? 'تم الإرسال' : ('خطأ: '+(j.error||''));
-});
-
-window.addEventListener('load', ()=>{
-  fetchProducts();
-  fetchOrders();
-});
-</script>
-</body>
-  </html>
