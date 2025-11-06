@@ -194,44 +194,8 @@
       list.appendChild(el);
     });
   </script>
-</body>
-</html>
- استخدم زر الواتساب أو اتصل برقم الصيدلية.</p>
-          <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-            <button class="btn btn-primary" id="orderBtn2">طلب أدوية</button>
-            <a id="waLink" class="btn" href="#">واتساب</a>
-            <a id="mapsLink" class="btn" href="PLACEHOLDER_MAP_LINK" target="_blank">فتح على الخريطة</a>
-          </div>
-        </div>
-      </section>
 
-    </main>
-
-    <footer>
-      <div class="muted">© <span id="year"></span>Dr-Merna-Pharmacy</div>
-      <div class="muted">تم إنشاء النموذج بواسطة فريق التصميم</div>
-    </footer>
-  </div>
-
-  <!-- Modal for order -->
-  <div class="modal-bg" id="modalBg">
-    <div class="modal">
-      <h3 id="modalTitle">طلب أونلاين</h3>
-      <p class="muted">اكتب اسم الدواء والكميّة وسنتواصل معك لتأكيد الطلب.</p>
-      <form id="orderForm">
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <input name="name" placeholder="الاسم / Name" style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)">
-          <input name="phone" placeholder="رقم الهاتف / Phone" style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06)">
-          <textarea name="note" placeholder="اكتب هنا طلبك (اسم الدواء، الكمية)..." style="padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);min-height:90px"></textarea>
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <button type="button" class="btn" id="closeModal">إلغاء / Close</button>
-            <button type="submit" class="btn btn-primary">إرسال الطلب / Submit</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
+  
   <script>
     // ====== إعدادات قابلة للتعديل ======
 const PHARMACY_NAME = 'صيدلية دكتورة ميرنا';
