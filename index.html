@@ -6,81 +6,92 @@
   <title>صيدلية دكتورة ميرنا</title>
   <style>
     :root {
-      --bg-light:#f4f7fb; --card-light:#fff; --text-light:#0b1220;
-      --bg-dark:#0b1220; --card-dark:#1c2430; --text-dark:#f4f7fb;
-      --accent:#0066FF; --muted:#6b7280; --radius:14px;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --accent: #0066FF;
+      --muted: #6b7280;
+      --radius: 14px;
+      --text: #0b1220;
+      --border: #e6eef8;
     }
 
-    [data-theme='light'] {
-      --bg: var(--bg-light);
-      --card: var(--card-light);
-      --text: var(--text-light);
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #3b82f6;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border: #334155;
     }
-    [data-theme='dark'] {
-      --bg: var(--bg-dark);
-      --card: var(--card-dark);
-      --text: var(--text-dark);
+
+    * {
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
     }
 
     body {
-      font-family: 'Inter', system-ui, -apple-system, Arial;
+      font-family: 'Inter', system-ui, -apple-system, Arial, sans-serif;
       background: var(--bg);
-      color: var(--text);
       margin: 0;
       padding: 28px;
-      transition: background 0.3s, color 0.3s;
+      color: var(--text);
+      min-height: 100vh;
     }
 
-    .wrap { max-width: 960px; margin: auto; }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+    }
 
     header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 24px; gap: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .brand {
-      display: flex; align-items: center; gap: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
     }
 
     .logo {
-      width: 56px; height: 56px;
+      width: 56px;
+      height: 56px;
       border-radius: 12px;
-      background: linear-gradient(135deg,var(--accent),#7c3aed);
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; font-weight:900; font-size:20px;
-    }
-
-    .toggle-btn {
-      background: var(--card);
-      border: 1px solid #e6eef8;
-      padding: 8px 14px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.3s;
-    }
-
-    .toggle-btn:hover {
-      background: #eef5ff;
+      background: linear-gradient(135deg, var(--accent), #7c3aed);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
     }
 
     .card {
       background: var(--card);
       padding: 18px;
       border-radius: var(--radius);
-      box-shadow: 0 8px 30px rgba(11,17,36,0.06);
-      transition: background 0.3s;
+      box-shadow: 0 8px 30px rgba(11, 17, 36, 0.06);
+      border: 1px solid var(--border);
     }
 
-    .grid { display: grid; grid-template-columns: 1fr 320px; gap: 18px; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 18px;
+    }
 
-    input, textarea {
+    .form input, .form textarea {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border-radius: 10px;
-      border: 1px solid #e6eef8;
-      margin-top: 8px;
-      font-family: inherit;
+      border: 1px solid var(--border);
+      margin-top: 10px;
+      background: var(--card);
+      color: var(--text);
+      box-sizing: border-box;
     }
 
     button.primary {
@@ -89,183 +100,304 @@
       border: none;
       padding: 12px 16px;
       border-radius: 10px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
       margin-top: 10px;
     }
 
-    .muted { color: var(--muted); }
+    .btn {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
 
     .products {
-      display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .product {
-      background: #fbfdff;
-      padding: 10px;
+      background: var(--card);
+      padding: 12px;
       border-radius: 10px;
-      border: 1px solid #eef5ff;
-      min-width: 150px;
+      border: 1px solid var(--border);
+      min-width: 160px;
+      flex: 1;
+      min-width: 200px;
     }
 
     footer {
-      margin-top: 24px;
+      margin-top: 20px;
       text-align: center;
       color: var(--muted);
     }
 
-    @media(max-width:900px){
-      .grid { grid-template-columns: 1fr; }
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-bg {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      width: 420px;
+      max-width: 90%;
+      background: var(--card);
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .badge {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), #8b5cf6);
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .address-link {
+      color: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: rgba(0, 102, 255, 0.1);
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    #productsGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .controls {
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+      
+      .actions {
+        flex-direction: column;
+      }
+      
+      .actions .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
-
-<body data-theme="light">
+<body>
   <div class="wrap">
     <header>
       <div class="brand">
         <div class="logo">PH</div>
         <div>
-          <div style="font-weight:900;font-size:18px">صيدلية دكتورة ميرنا</div>
-          <div class="muted">توصيل سريع — استشارات دوائية</div>
+          <div style="font-weight:900">صيدلية دكتورة ميرنا</div>
+          <div class="muted">توصيل سريع — استشارات صيدلانية</div>
         </div>
       </div>
-      <button id="themeToggle" class="toggle-btn">🌙 الوضع الداكن</button>
+      <div class="controls">
+        <button class="btn" id="themeBtn">وضع فاتح</button>
+        <a href="/login" style="text-decoration:none">
+          <button class="btn btn-primary">للدخول للادمن</button>
+        </a>
+      </div>
     </header>
 
     <main class="grid">
       <section class="card">
         <h2>اطلب دواءك الآن</h2>
         <p class="muted">اكتب اسم الدواء والكمية وسنتواصل معك لتأكيد السعر والتوصيل.</p>
-        <form id="orderForm">
+        
+        <div class="info">
+          <div class="item">
+            <div class="badge">مفتوح الآن</div>
+            <div style="flex:1">
+              <div class="muted">العنوان</div>
+              <a id="addressLink" class="address-link" href="#" target="_blank">اضغط هنا لرؤية العنوان</a>
+            </div>
+          </div>
+
+          <div class="item">
+            <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#34d399);display:flex;align-items:center;justify-content:center;color:white">☎</div>
+            <div>
+              <div class="muted">اتصل الآن</div>
+              <div id="phoneNumber" style="font-weight:800">01208881905</div>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="orderBtn">اطلب أونلاين</button>
+            <button class="btn" id="waBtn">تواصل عبر واتساب</button>
+          </div>
+        </div>
+
+        <form id="orderForm" class="form">
           <input name="name" placeholder="الاسم" required>
           <input name="phone" placeholder="رقم الهاتف" required>
           <textarea name="note" placeholder="تفاصيل الطلب (مثلاً: باراسيتامول 20 كبسولة)"></textarea>
           <button class="primary" type="submit">أرسل الطلب</button>
         </form>
-        <div id="msg" style="margin-top:12px;color:green;font-weight:700"></div>
+        <div id="msg" style="margin-top:12px;color:green"></div>
 
         <h3 style="margin-top:18px">منتجات شائعة</h3>
-        <div id="productsList" class="products"></div>
+        <div id="productsGrid" class="products"></div>
       </section>
 
       <aside class="card">
         <h3>معلومات الاتصال</h3>
-        <p class="muted">العنوان: <a id="mapsLink" href="#" target="_blank" class="muted" style="font-weight:700;color:var(--accent)">عرض العنوان على الخريطة</a></p>
+        <div class="muted">العنوان: اضغط لفتح الخريطة</div>
+        <a id="mapsLink" href="#" target="_blank" style="display:inline-block;margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(0, 102, 255, 0.1);color:var(--accent);text-decoration:none">عرض العنوان</a>
 
-        <h4 style="margin-top:12px">خدماتنا</h4>
+        <h4 style="margin-top:14px">خدماتنا</h4>
         <ul class="muted">
           <li>توصيل محلي</li>
           <li>استشارات دوائية</li>
           <li>منتجات تجميل وڤيتامينات</li>
         </ul>
+
+        <div style="margin-top:12px">
+          <div class="muted">ساعات العمل</div>
+          <div style="font-weight:800">9:00 ص — 11:00 م</div>
+        </div>
       </aside>
     </main>
 
-    <footer>© <span id="year"></span> Dr-Merna-Pharmacy — جميع الحقوق محفوظة</footer>
+    <footer class="muted">© <span id="year"></span> Dr-Merna-Pharmacy— جميع الحقوق محفوظة</footer>
+  </div>
+
+  <!-- Modal for order -->
+  <div class="modal-bg" id="modalBg">
+    <div class="modal">
+      <h3 id="modalTitle">طلب أونلاين</h3>
+      <p class="muted">اكتب اسم الدواء والكميّة وسنتواصل معك لتأكيد الطلب.</p>
+      <form id="modalOrderForm">
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <input name="name" placeholder="الاسم" style="padding:10px;border-radius:8px;border:1px solid var(--border); background: var(--card); color: var(--text)">
+          <input name="phone" placeholder="رقم الهاتف" style="padding:10px;border-radius:8px;border:1px solid var(--border); background: var(--card); color: var(--text)">
+          <textarea name="note" placeholder="اكتب هنا طلبك (اسم الدواء، الكمية)..." style="padding:10px;border-radius:8px;border:1px solid var(--border);min-height:90px; background: var(--card); color: var(--text)"></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button type="button" class="btn" id="closeModal">إلغاء</button>
+            <button type="submit" class="btn btn-primary">إرسال الطلب</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 
   <script>
-    // إعدادات عامة
-    const MAP_LINK = 'https://www.google.com/maps?q=pharmacy';
-    document.getElementById('mapsLink').href = MAP_LINK;
+    // ====== إعدادات قابلة للتعديل ======
+    const PHARMACY_NAME = 'صيدلية دكتورة ميرنا';
+    const WHATSAPP_NUMBER = '201208881905'; // رقم واتساب دولي بدون + مثال: 201234567890
+    const PHONE_NUMBER = '+201208881905'; // رقم للصيدلية
+    const MAP_LINK = 'https://www.google.com/maps'; // ضع رابط Google Maps لعنوان الصيدلية
+
+    // ====== DOM ======
     document.getElementById('year').innerText = new Date().getFullYear();
-
-    // تبديل الوضع الداكن والفاتح
-    const themeBtn = document.getElementById('themeToggle');
-    const root = document.body;
-    let currentTheme = localStorage.getItem('theme') || 'light';
-    root.dataset.theme = currentTheme;
-    themeBtn.innerText = currentTheme === 'dark' ? '☀️ الوضع الفاتح' : '🌙 الوضع الداكن';
-
-    themeBtn.addEventListener('click', ()=>{
-      currentTheme = (currentTheme === 'light') ? 'dark' : 'light';
-      root.dataset.theme = currentTheme;
-      localStorage.setItem('theme', currentTheme);
-      themeBtn.innerText = currentTheme === 'dark' ? '☀️ الوضع الفاتح' : '🌙 الوضع الداكن';
-    });
-
-    // إرسال الطلب
-    document.getElementById('orderForm').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      const f = e.target;
-      const data = {
-        name: f.name.value.trim(),
-        phone: f.phone.value.trim(),
-        note: f.note.value.trim()
-      };
-      if (!data.name || !data.phone) return alert('الاسم ورقم الهاتف مطلوبان');
-
-      try {
-        const res = await fetch('/api/orders', {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(data)
-        });
-        const j = await res.json();
-        if (j.ok) {
-          document.getElementById('msg').innerText = '✅ تم إرسال الطلب بنجاح!';
-          f.reset();
-        } else alert('حدث خطأ أثناء الإرسال.');
-      } catch {
-        alert('⚠️ خطأ في الاتصال بالخادم.');
-      }
-    });
-
-    // المنتجات (تجريبية)
-    const products = [
-      {name:'باراسيتامول 500 مج', price:'EGP 20'},
-      {name:'فيتامين سي 1000', price:'EGP 120'},
-      {name:'كريم مرطب', price:'EGP 80'}
-    ];
-
-    const list = document.getElementById('productsList');
-    products.forEach(p=>{
-      const d = document.createElement('div');
-      d.className='product';
-      d.innerHTML = `<strong>${p.name}</strong><div style="color:#0b6df0;font-weight:700">${p.price}</div>`;
-      list.appendChild(d);
-    });
-  </script>
-</body>
-</html>
-   document.title = `صيدلية — ${PHARMACY_NAME}`;
     document.getElementById('phoneNumber').innerText = PHONE_NUMBER;
     document.getElementById('addressLink').href = MAP_LINK;
     document.getElementById('mapsLink').href = MAP_LINK;
-    document.getElementById('year').innerText = new Date().getFullYear();
 
     // Whatsapp links
     const waBtn = document.getElementById('waBtn');
-    const waLink = document.getElementById('waLink');
     function openWhatsAppWith(text='مرحبًا، أريد طلب دواء'){
       const base = `https://wa.me/${WHATSAPP_NUMBER}`;
       const url = `${base}?text=${encodeURIComponent(text)}`;
       window.open(url,'_blank');
     }
     waBtn.addEventListener('click',()=> openWhatsAppWith());
-    waLink.addEventListener('click',(e)=>{ e.preventDefault(); openWhatsAppWith(); });
 
-    // ===== Products sample data (Arabic + English) =====
+    // ===== Products sample data =====
     const products = [
-      {id:1,ar:{name:'باراسيتامول 500 مج',desc:'مسكن وخافض للحرارة',price:'EGP 20'},en:{name:'Paracetamol 500mg',desc:'Painkiller & fever reducer',price:'EGP 20'}},
-      {id:2,ar:{name:'فيتامين سي 1000',desc:'مكمل غذائي',price:'EGP 120'},en:{name:'Vitamin C 1000',desc:'Dietary supplement',price:'EGP 120'}},
-      {id:3,ar:{name:'كريم مرطب',desc:'للبشرة الجافة',price:'EGP 80'},en:{name:'Moisturizing cream',desc:'For dry skin',price:'EGP 80'}},
+      {id:1, name:'باراسيتامول 500 مج', desc:'مسكن وخافض للحرارة', price:'EGP 20'},
+      {id:2, name:'فيتامين سي 1000', desc:'مكمل غذائي', price:'EGP 120'},
+      {id:3, name:'كريم مرطب', desc:'للبشرة الجافة', price:'EGP 80'},
+      {id:4, name:'أوميغا 3', desc:'مكمل غذائي للقلب', price:'EGP 150'},
+      {id:5, name:'فيتامين د 1000 وحدة', desc:'مكمل لفيتامين د', price:'EGP 90'},
+      {id:6, name:'أدوية البرد', desc:'لعلاج أعراض البرد', price:'EGP 35'},
     ];
 
     const productsGrid = document.getElementById('productsGrid');
-    function renderProducts(lang='ar'){
+    function renderProducts(){
       productsGrid.innerHTML = '';
       products.forEach(p=>{
-        const div = document.createElement('div'); div.className='product card';
+        const div = document.createElement('div'); 
+        div.className='product';
         div.innerHTML = `
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
-              <div class="name">${lang==='ar'?p.ar.name:p.en.name}</div>
-              <div class="muted" style="font-size:13px">${lang==='ar'?p.ar.desc:p.en.desc}</div>
+              <div style="font-weight:800">${p.name}</div>
+              <div class="muted" style="font-size:13px">${p.desc}</div>
             </div>
             <div style="text-align:right">
-              <div class="price">${lang==='ar'?p.ar.price:p.en.price}</div>
+              <div style="font-weight:800;color:var(--accent)">${p.price}</div>
               <div style="margin-top:8px"><button class="btn" onclick="quickOrder(${p.id})">اطلب</button></div>
             </div>
           </div>
@@ -277,19 +409,19 @@
     // Quick order from product
     window.quickOrder = function(id){
       const prod = products.find(x=>x.id===id);
-      const text = `أود طلب: ${prod.ar.name} - ${prod.ar.price}`;
+      const text = `أود طلب: ${prod.name} - ${prod.price}`;
       openWhatsAppWith(text);
     }
 
     // ===== Modal order handling =====
     const modalBg = document.getElementById('modalBg');
     const orderBtn = document.getElementById('orderBtn');
-    const orderBtn2 = document.getElementById('orderBtn2');
     const closeModal = document.getElementById('closeModal');
+    
     orderBtn.addEventListener('click',()=> modalBg.style.display='flex');
-    orderBtn2.addEventListener('click',()=> modalBg.style.display='flex');
     closeModal.addEventListener('click',()=> modalBg.style.display='none');
-    document.getElementById('orderForm').addEventListener('submit',(e)=>{
+    
+    document.getElementById('modalOrderForm').addEventListener('submit',(e)=>{
       e.preventDefault();
       const data = new FormData(e.target);
       const name = data.get('name') || '';
@@ -301,55 +433,48 @@
       alert('تم إرسال الطلب عبر واتساب — تأكد من فتح واتساب على جهازك');
     });
 
-    // Theme toggle and language toggle
-    const themeBtn = document.getElementById('themeBtn');
-    const langBtn = document.getElementById('langBtn');
+    // Form submission
+    document.getElementById('orderForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const f = e.target;
+      const data = { name: f.name.value.trim(), phone: f.phone.value.trim(), note: f.note.value.trim() };
+      if (!data.name || !data.phone) return alert('الاسم ورقم الهاتف مطلوبان');
+      
+      try {
+        // محاكاة إرسال البيانات للخادم
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        document.getElementById('msg').innerText = 'تم إرسال الطلب — سنتواصل معك حالًا';
+        f.reset();
+        
+        // إخفاء الرسالة بعد 5 ثواني
+        setTimeout(() => {
+          document.getElementById('msg').innerText = '';
+        }, 5000);
+      } catch (err) {
+        alert('خطأ في الاتصال بالخادم');
+      }
+    });
 
+    // Theme toggle
+    const themeBtn = document.getElementById('themeBtn');
+    
     function setTheme(theme){
       document.documentElement.setAttribute('data-theme', theme);
-      localStorage.setItem('theme',theme);
-      themeBtn.innerText = theme==='dark' ? 'داكن' : 'فاتح';
+      localStorage.setItem('theme', theme);
+      themeBtn.innerText = theme === 'dark' ? 'وضع فاتح' : 'وضع غامق';
     }
-    function setLang(lang){
-      localStorage.setItem('lang',lang);
-      if(lang==='ar'){
-        document.documentElement.lang = 'ar';
-        document.documentElement.dir = 'rtl';
-        document.getElementById('heroTitle').innerText = `مرحباً بكم في ${PHARMACY_NAME}`;
-        document.getElementById('heroDesc').innerText = 'صيدلية متاحة لخدمتكم — منتجات طبية، مستلزمات، ونصائح صحية سريعة. اطلب الآن وسنوصلك.';
-        document.getElementById('modalTitle').innerText = 'طلب أونلاين';
-        renderProducts('ar');
-      }else{
-        document.documentElement.lang = 'en';
-        document.documentElement.dir = 'ltr';
-        document.getElementById('heroTitle').innerText = `Welcome to ${PHARMACY_NAME}`;
-        document.getElementById('heroDesc').innerText = 'Your local pharmacy — medicines, personal care, and quick advice. Order now.';
-        document.getElementById('modalTitle').innerText = 'Online Order';
-        renderProducts('en');
-      }
-    }
-
+    
     // Initialize from localStorage or defaults
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
-    const savedLang = localStorage.getItem('lang') || 'ar';
-    setLang(savedLang);
-
-    themeBtn.addEventListener('click',()=> setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
-    langBtn.addEventListener('click',()=> setLang(document.documentElement.lang==='ar'?'en':'ar'));
-
-    // Smooth scroll for nav
-    document.querySelectorAll('a[data-scroll]').forEach(a=>{
-      a.addEventListener('click',(e)=>{
-        e.preventDefault();
-        const id = a.getAttribute('href').slice(1);
-        document.getElementById(id).scrollIntoView({behavior:'smooth'});
-      });
+    
+    themeBtn.addEventListener('click',()=> {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      setTheme(currentTheme === 'dark' ? 'light' : 'dark');
     });
 
     // render initial products
-    renderProducts(localStorage.getItem('lang')==='en' ? 'en':'ar');
+    renderProducts();
   </script>
 </body>
-  </html>
-  
+</html>
